@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import game_tracker.exception.ResourceNotFoundException;
+import game_tracker.exception.UsernameNotFoundException;
 import game_tracker.exception.UsernameTakenException;
 import game_tracker.model.User;
 import game_tracker.service.UserService;
@@ -30,9 +32,15 @@ public class UserController {
 		return service.getAllUsers();
 	}
 	
-	@GetMapping("/user/{id}")
-	public ResponseEntity<?> getUserById(@PathVariable int id) throws ResourceNotFoundException {
+	@GetMapping("/user/id")
+	public ResponseEntity<?> getUserById(@RequestParam int id) throws ResourceNotFoundException {
 		User found = service.getUserById(id);
+		return ResponseEntity.status(200).body(found);
+	}
+	
+	@GetMapping("/user/username")
+	public ResponseEntity<?> getUserByUsername(@RequestParam String username) throws UsernameNotFoundException {
+		User found = service.getUserByUsername(username);
 		return ResponseEntity.status(200).body(found);
 	}
 	

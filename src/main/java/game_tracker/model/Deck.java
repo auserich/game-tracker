@@ -22,18 +22,22 @@ public class Deck implements Serializable {
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
 	private User user;
 	
-	
+	@ManyToOne
+	@JoinColumn(name = "commander_id", referencedColumnName = "id")
 	private Commander commander;
+	
+	private String name;
 	
 	public Deck() {
 		super();
 	}
 
-	public Deck(Integer id, User user, Commander commander) {
+	public Deck(Integer id, User user, Commander commander, String name) {
 		super();
 		this.id = id;
 		this.user = user;
 		this.commander = commander;
+		this.name = name;
 	}
 
 	public Integer getId() {
@@ -58,5 +62,13 @@ public class Deck implements Serializable {
 
 	public void setCommander(Commander commander) {
 		this.commander = commander;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

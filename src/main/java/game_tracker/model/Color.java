@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,34 +17,34 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
-public class Commander implements Serializable {
-	
-	private static final long serialVersionUID = 1L;
+public class Color implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
+	public enum ColorCode {
+        W, U, B, R, G
+    }
+	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	@Column(unique = true, nullable = false)
-	private String name;
+	@Enumerated(EnumType.STRING)
+	private ColorCode code;
 	
 	@JsonProperty(access = Access.WRITE_ONLY)
-	@OneToMany(mappedBy = "commander", cascade = CascadeType.ALL)
-	private List<Deck> deck;
-	
-	@JsonProperty(access = Access.WRITE_ONLY)
-	@OneToMany(mappedBy = "commander", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "color", cascade = CascadeType.ALL)
 	private List<ColorIdentity> colorIdentity;
-
-	public Commander() {
+	
+	public Color() {
 		super();
 	}
 
-	public Commander(Integer id, String name, List<Deck> deck, List<ColorIdentity> colorIdentity) {
+	public Color(Integer id, ColorCode code, List<ColorIdentity> colorIdentity) {
 		super();
 		this.id = id;
-		this.name = name;
-		this.deck = deck;
+		this.code = code;
 		this.colorIdentity = colorIdentity;
 	}
 
@@ -54,20 +56,12 @@ public class Commander implements Serializable {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public ColorCode getCode() {
+		return code;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public List<Deck> getDeck() {
-		return deck;
-	}
-
-	public void setDeck(List<Deck> deck) {
-		this.deck = deck;
+	public void setCode(ColorCode code) {
+		this.code = code;
 	}
 
 	public List<ColorIdentity> getColorIdentity() {
