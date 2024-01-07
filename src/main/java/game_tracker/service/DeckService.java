@@ -32,7 +32,7 @@ public class DeckService {
 	}
 	
 	public List<Deck> getAllDecksFromUser(int userId) {
-		return repo.getAllDecksFromUser(userId);
+		return repo.getAllDecksFromUserById(userId);
 	}
 	
 	public Deck getDeckByUserAndCommander(int userId, int commanderId) {
@@ -46,6 +46,13 @@ public class DeckService {
 		}
 		Deck created = new Deck(null, user, commander, name);
 		return repo.save(created);
+	}
+	
+	public Deck updateDeck(Deck deck) throws ResourceNotFoundException {
+		if (repo.existsById(deck.getId())) {
+			return repo.save(deck);
+		}
+		throw new ResourceNotFoundException("Deck", deck.getId());
 	}
 	
 	public Deck deleteDeck(int id) throws ResourceNotFoundException {

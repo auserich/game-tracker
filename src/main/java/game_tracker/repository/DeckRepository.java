@@ -12,7 +12,7 @@ import game_tracker.model.Deck;
 public interface DeckRepository extends JpaRepository<Deck, Integer> {
 
 	@Query(value = "SELECT * FROM deck WHERE user_id = ?1", nativeQuery = true)
-	public List<Deck> getAllDecksFromUser(int userId);
+	public List<Deck> getAllDecksFromUserById(int userId);
 	
 	@Query(value = "SELECT * FROM deck WHERE user_id = ?1 AND commander_id = ?2", nativeQuery = true)
 	public Deck getDeckByUserAndCommander(int userId, int commanderId);

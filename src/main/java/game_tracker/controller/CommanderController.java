@@ -48,7 +48,7 @@ public class CommanderController {
 	}
 	
 	@GetMapping("/commander/name/{name}")
-	public ResponseEntity<?> getCommanderByName(@RequestBody String name) {
+	public ResponseEntity<?> getCommanderByName(@PathVariable String name) throws ResourceNotFoundException {
 		Commander found = service.getCommanderByName(name);
 		return ResponseEntity.status(200).body(found);
 	}

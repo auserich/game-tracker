@@ -30,15 +30,13 @@ public class Commander implements Serializable {
 	@OneToMany(mappedBy = "commander", cascade = CascadeType.ALL)
 	private List<Deck> deck;
 	
-	@JsonProperty(access = Access.WRITE_ONLY)
-	@OneToMany(mappedBy = "commander", cascade = CascadeType.ALL)
-	private List<ColorIdentity> colorIdentity;
+	private String colorIdentity;
 
 	public Commander() {
 		super();
 	}
 
-	public Commander(Integer id, String name, List<Deck> deck, List<ColorIdentity> colorIdentity) {
+	public Commander(Integer id, String name, List<Deck> deck, String colorIdentity) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -70,11 +68,11 @@ public class Commander implements Serializable {
 		this.deck = deck;
 	}
 
-	public List<ColorIdentity> getColorIdentity() {
+	public String getColorIdentity() {
 		return colorIdentity;
 	}
 
-	public void setColorIdentity(List<ColorIdentity> colorIdentity) {
+	public void setColorIdentity(String colorIdentity) {
 		this.colorIdentity = colorIdentity;
 	}
 }

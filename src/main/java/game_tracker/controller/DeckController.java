@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -65,6 +67,16 @@ public class DeckController {
 		Commander foundCommander = commanderService.getCommanderByName(commanderName);
 		Deck created = service.createDeck(foundUser, foundCommander, deckName);
 		return ResponseEntity.status(201).body(created);
+	}
+	
+	@PutMapping("/deck")
+	public ResponseEntity<Deck> updateDeck(@RequestBody Deck deck) throws ResourceNotFoundException {
+		// Ensure user/commander associated with deck exists
+		userService.getUserById(deck.getUser().getId());
+		commanderService.getCommanderById(deck.getCommander().getId());
+		
+		Deck updated = service.updateDeck(deck);
+		return ResponseEntity.status(200).body(updated);
 	}
 	
 	@DeleteMapping("/deck")

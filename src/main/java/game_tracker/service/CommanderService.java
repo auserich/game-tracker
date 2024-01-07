@@ -29,11 +29,16 @@ public class CommanderService {
 		return found.get();
 	}
 	
-	public Commander getCommanderByName(String name) {
+	// TODO: Figure out better solution that passing -1 as an id to exception
+	public Commander getCommanderByName(String name) throws ResourceNotFoundException {
 		Optional<Commander> found = repo.findByName(name);
+		if (found.isEmpty()) {
+			throw new ResourceNotFoundException("Commander", -1);
+		}
 		return found.get();
 	}
 	
+	// TODO: Probably make a CommanderNameTakenException
 	public Commander createCommander(Commander commander) throws UsernameTakenException {
 		Optional<Commander> exists = repo.findByName(commander.getName());
 		if (!exists.isEmpty()) {
