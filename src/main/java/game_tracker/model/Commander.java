@@ -4,12 +4,11 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,21 +23,20 @@ public class Commander implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
+	@Column(unique = true, nullable = false)
 	private String name;
 	
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@OneToMany(mappedBy = "commander", cascade = CascadeType.ALL)
 	private List<Deck> deck;
 	
-	@ManyToOne
-	@JoinColumn(name = "color_identity_id")
-	private ColorIdentity colorIdentity;
+	private String colorIdentity;
 
 	public Commander() {
 		super();
 	}
 
-	public Commander(Integer id, String name, List<Deck> deck, ColorIdentity colorIdentity) {
+	public Commander(Integer id, String name, List<Deck> deck, String colorIdentity) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -70,11 +68,11 @@ public class Commander implements Serializable {
 		this.deck = deck;
 	}
 
-	public ColorIdentity getColorIdentity() {
+	public String getColorIdentity() {
 		return colorIdentity;
 	}
 
-	public void setColorIdentity(ColorIdentity colorIdentity) {
+	public void setColorIdentity(String colorIdentity) {
 		this.colorIdentity = colorIdentity;
 	}
 }

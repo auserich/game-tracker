@@ -33,4 +33,26 @@ public class GlobalExceptionHandler {
 		// constructing the response
 		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
 	}
+	
+	@ExceptionHandler(ResourceAlreadyExistsException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<?> resourceAlreadyExists(ResourceAlreadyExistsException ex, WebRequest request) {
+		
+		// what data be returned back in response when exception thrown
+		ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
+						
+		// constructing the response
+		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(UsernameNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public ResponseEntity<?> usernameNotFound(UsernameNotFoundException ex, WebRequest request) {
+		
+		// what data be returned back in response when exception thrown
+		ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
+						
+		// constructing the response
+		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+	}
 }
