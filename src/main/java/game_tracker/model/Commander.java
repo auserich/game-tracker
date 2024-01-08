@@ -30,6 +30,7 @@ public class Commander implements Serializable {
 	@OneToMany(mappedBy = "commander", cascade = CascadeType.ALL)
 	private List<Deck> deck;
 	
+	@Column(nullable = false)
 	private String colorIdentity;
 
 	public Commander() {

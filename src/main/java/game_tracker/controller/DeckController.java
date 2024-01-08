@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import game_tracker.exception.ResourceAlreadyExistsException;
 import game_tracker.exception.ResourceNotFoundException;
 import game_tracker.exception.UsernameNotFoundException;
+import game_tracker.exception.ValidationException;
 import game_tracker.model.Commander;
 import game_tracker.model.Deck;
 import game_tracker.model.User;
@@ -53,6 +54,7 @@ public class DeckController {
 		return service.getAllDecksFromUser(found.getId());
 	}
 	
+	// TODO: Left off here
 	@GetMapping("/deck/user/commander")
 	public ResponseEntity<Deck> getDeckByUserAndCommander(@RequestParam int userId, @RequestParam int commanderId) throws ResourceNotFoundException {
 		User foundUser = userService.getUserById(userId);

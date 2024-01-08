@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import game_tracker.exception.ResourceAlreadyExistsException;
 import game_tracker.exception.ResourceNotFoundException;
+import game_tracker.exception.ValidationException;
 import game_tracker.model.Commander;
 import game_tracker.model.Deck;
 import game_tracker.model.User;
@@ -40,6 +41,8 @@ public class DeckService {
 	}
 	
 	public Deck createDeck(User user, Commander commander, String name) throws ResourceAlreadyExistsException {
+		
+		//TODO: Instead, get user and commander separately. Then check if commander is in database or needs to be searched via API
 		Deck found = repo.getDeckByUserAndCommander(user.getId(), commander.getId());
 		if (found != null) {
 			throw new ResourceAlreadyExistsException("Deck", found.getId());
