@@ -55,4 +55,15 @@ public class GlobalExceptionHandler {
 		// constructing the response
 		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
 	}
+	
+	@ExceptionHandler(ValidationException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<?> usernameNotFound(ValidationException ex, WebRequest request) {
+		
+		// what data be returned back in response when exception thrown
+		ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
+						
+		// constructing the response
+		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+	}
 }

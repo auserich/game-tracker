@@ -2,6 +2,7 @@ package game_tracker.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,6 +27,7 @@ public class Deck implements Serializable {
 	@JoinColumn(name = "commander_id", referencedColumnName = "id")
 	private Commander commander;
 	
+	@Column(nullable = false)
 	private String name;
 	
 	public Deck() {

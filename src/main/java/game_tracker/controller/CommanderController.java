@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import game_tracker.exception.ResourceAlreadyExistsException;
 import game_tracker.exception.ResourceNotFoundException;
 import game_tracker.exception.UsernameTakenException;
+import game_tracker.exception.ValidationException;
 import game_tracker.model.Commander;
 import game_tracker.service.CommanderService;
 
@@ -41,21 +44,27 @@ public class CommanderController {
 		return ResponseEntity.status(response.getStatusCode()).body(responseBody);
 	}
 	
-	@GetMapping("/commander/{id}")
-	public ResponseEntity<?> getCommanderById(@PathVariable int id) throws ResourceNotFoundException {
+	@GetMapping("/commander/id/{id}")
+	public ResponseEntity<?> getCommanderById(@RequestParam int id) throws ResourceNotFoundException {
 		Commander found = service.getCommanderById(id);
 		return ResponseEntity.status(200).body(found);
 	}
 	
 	@GetMapping("/commander/name/{name}")
-	public ResponseEntity<?> getCommanderByName(@PathVariable String name) throws ResourceNotFoundException {
+	public ResponseEntity<?> getCommanderByName(@RequestParam String name) throws ResourceNotFoundException {
 		Commander found = service.getCommanderByName(name);
 		return ResponseEntity.status(200).body(found);
 	}
 	
 	@PostMapping("/commander")
-	public ResponseEntity<?> createCommander(@RequestBody Commander commander) throws UsernameTakenException {
+	public ResponseEntity<?> createCommander(@RequestBody Commander commander) throws UsernameTakenException, ValidationException {
 		Commander created = service.createCommander(commander);
+		return ResponseEntity.status(201).body(created);
+	}
+	
+	@PostMapping("/commander/search")
+	public ResponseEntity<?> createCommanderBySearch(@RequestParam  String name) throws UsernameTakenException, ResourceNotFoundException, ResourceAlreadyExistsException, ValidationException {
+		Commander created = service.createCommanderBySearch(name);
 		return ResponseEntity.status(201).body(created);
 	}
 	
