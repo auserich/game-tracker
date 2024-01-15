@@ -27,7 +27,7 @@ public class Deck implements Serializable {
 	@JoinColumn(name = "commander_id", referencedColumnName = "id")
 	private Commander commander;
 	
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String name;
 	
 	public Deck() {

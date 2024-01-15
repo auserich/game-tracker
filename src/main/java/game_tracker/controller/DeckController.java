@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import game_tracker.exception.ResourceAlreadyExistsException;
 import game_tracker.exception.ResourceNotFoundException;
 import game_tracker.exception.UsernameNotFoundException;
-import game_tracker.exception.ValidationException;
 import game_tracker.model.Commander;
 import game_tracker.model.Deck;
 import game_tracker.model.User;
@@ -48,19 +47,48 @@ public class DeckController {
 		return ResponseEntity.status(200).body(found);
 	}
 	
-	@GetMapping("/deck/user")
-	public List<Deck> getAllDecksFromUser(@RequestParam int userId) throws ResourceNotFoundException {
+	@GetMapping("/deck/userId")
+	public List<Deck> getAllDecksFromUserById(@RequestParam int userId) throws ResourceNotFoundException {
 		User found = userService.getUserById(userId);
-		return service.getAllDecksFromUser(found.getId());
+		return service.getAllDecksFromUserById(found.getId());
 	}
 	
-	// TODO: Left off here
+	@GetMapping("/deck/username")
+	public List<Deck> getAllDecksFromUserByUsername(@RequestParam String username) throws ResourceNotFoundException, UsernameNotFoundException {
+		User found = userService.getUserByUsername(username);
+		return service.getAllDecksFromUserByUsername(found.getUsername());
+	}
+	
 	@GetMapping("/deck/user/commander")
 	public ResponseEntity<Deck> getDeckByUserAndCommander(@RequestParam int userId, @RequestParam int commanderId) throws ResourceNotFoundException {
 		User foundUser = userService.getUserById(userId);
 		Commander foundCommander = commanderService.getCommanderById(commanderId);
 		Deck found = service.getDeckByUserAndCommander(foundUser.getId(), foundCommander.getId());
 		return ResponseEntity.status(200).body(found);
+	}
+	
+	@GetMapping("/deck/wins/name")
+	public Integer getWinsByDeckName(@RequestParam String name) throws ResourceNotFoundException  {
+		Deck found = service.getDeckByName(name);
+		return service.getWinsByDeckName(found.getName());
+	}
+	
+	@GetMapping("deck/losses/name")
+	public Integer getLossesByDeckName(@RequestParam String name) throws ResourceNotFoundException {
+		Deck found = service.getDeckByName(name);
+		return service.getLossesByDeckName(found.getName());
+	}
+	
+	@GetMapping("deck/games/name")
+	public Integer getGameCountByDeckName(@RequestParam String name) throws ResourceNotFoundException {
+		Deck found = service.getDeckByName(name);
+		return service.getGameCountByDeckName(found.getName());
+	}
+	
+	@GetMapping("deck/winstreak/name")
+	public Integer getHighestWinstreakByDeckName(@RequestParam String name) {
+		Deck found = service.getDeckByName(name);
+		return service.getHighestWinstreakByDeckName(found.getName());
 	}
 	
 	@PostMapping("/deck")
@@ -81,9 +109,15 @@ public class DeckController {
 		return ResponseEntity.status(200).body(updated);
 	}
 	
-	@DeleteMapping("/deck")
-	public ResponseEntity<Deck> deleteDeck(@RequestParam int id) throws ResourceNotFoundException {
-		Deck deleted = service.deleteDeck(id);
+	@DeleteMapping("/deck/id")
+	public ResponseEntity<Deck> deleteDeckById(@RequestParam int id) throws ResourceNotFoundException {
+		Deck deleted = service.deleteDeckById(id);
+		return ResponseEntity.status(200).body(deleted);
+	}
+	
+	@DeleteMapping("/deck/name")
+	public ResponseEntity<Deck> deleteDeckByName(@RequestParam String name) throws ResourceNotFoundException {
+		Deck deleted = service.deleteDeckByName(name);
 		return ResponseEntity.status(200).body(deleted);
 	}
 }
