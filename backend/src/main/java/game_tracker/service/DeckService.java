@@ -89,9 +89,11 @@ public class DeckService {
 	// 		 returning a list of Games that a deckname was present in. Autowire GameService and
 	//		 call that function from that. Also just add a getOrderedListOfGamesByDeckname or something
 	//		 then just call that function from in here since other functions would want that, too
-	public List<> getHighestWinstreakByDeckName(String name) {
-		
-	}
+	/*
+	 * public List<> getHighestWinstreakByDeckName(String name) {
+	 * 
+	 * }
+	 */
 	
 	public Deck createDeck(User user, Commander commander, String name) throws ResourceAlreadyExistsException {
 		
