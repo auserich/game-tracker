@@ -85,12 +85,17 @@ public class DeckController {
 		return service.getGameCountByDeckName(found.getName());
 	}
 	
-	@GetMapping("deck/winstreak/name")
-	/*
-	 * public Integer getHighestWinstreakByDeckName(@RequestParam String name) {
-	 * Deck found = service.getDeckByName(name); return
-	 * service.getHighestWinstreakByDeckName(found.getName()); }
-	 */
+	@GetMapping("deck/winstreak")
+	public Integer getHighestWinStreakByDeckName(@RequestParam String name) throws ResourceNotFoundException {
+		Deck found = service.getDeckByName(name);
+		return service.getHighestWinStreakByDeckName(found.getName());
+	}
+	
+	@GetMapping("deck/losestreak")
+	public Integer getHighestLoseStreakByDeckName(@RequestParam String name) throws ResourceNotFoundException {
+		Deck found = service.getDeckByName(name);
+		return service.getHighestLoseStreakByDeckName(found.getName());
+	}
 	
 	@PostMapping("/deck")
 	public ResponseEntity<Deck> createDeck(@RequestParam String username, @RequestParam String commanderName, @RequestParam String deckName) throws ResourceNotFoundException, ResourceAlreadyExistsException, UsernameNotFoundException {

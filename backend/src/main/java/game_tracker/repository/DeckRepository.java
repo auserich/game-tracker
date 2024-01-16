@@ -24,9 +24,6 @@ public interface DeckRepository extends JpaRepository<Deck, Integer> {
 	@Query(value = "SELECT * FROM deck WHERE user_id = ?1 AND commander_id = ?2", nativeQuery = true)
 	public Optional<Deck> getDeckByUserAndCommander(int userId, int commanderId);
 	
-	@Query(value = "SELECT * FROM game WHERE game.deck1_name = ?1 OR game.deck2_name = ?1 OR game.deck3_name = ?1 OR game.deck4_name = ?1 ORDER BY game.date ASC, game.game_number ASC", nativeQuery = true)
-	public List<Deck> findByDeckNameOrderByDateAndGameNumber(String name);
-	
 	// TODO: Figure out why this isn't working correctly
 	@Query(value = "SELECT COUNT(*) FROM game " +
 	        "WHERE ?1 IN (game.deck1_name, game.deck2_name, game.deck3_name, game.deck4_name) " +
