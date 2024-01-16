@@ -1,13 +1,18 @@
 package game_tracker.controller;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -51,6 +56,12 @@ public class GameController {
 			@RequestParam String winnerName
 			) throws ResourceNotFoundException {
 		
+		// Validate that winnerName is one of the deck names
+	    List<String> deckNames = Arrays.asList(deckName1, deckName2, deckName3, deckName4);
+	    if (!deckNames.contains(winnerName)) {
+	        return ResponseEntity.badRequest().body("Winner must be one of the participating decks.");
+	    }
+		
 		Deck deck4 = null;
 		try {
 		    if (deckName4 != null) {
@@ -73,7 +84,25 @@ public class GameController {
 				deck4,
 				deckService.getDeckByName(winnerName));
 		
-		service.createGame(created);
+		try {
+			service.createGame(created);
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
+		
 		return ResponseEntity.status(201).body(created);
+	}
+	
+	// TODO: Probably need input validation similar to creating a game
+	@PutMapping("/game")
+	public ResponseEntity<?> updateGame(@RequestBody Game game) throws ResourceNotFoundException {
+		Game updated = service.updateGame(game);
+		return ResponseEntity.status(200).body(updated);
+	}
+	
+	@DeleteMapping("/game/{id}")
+	public ResponseEntity<?> deleteGameById(@PathVariable int id) throws ResourceNotFoundException {
+		Game deleted = service.deleteGameById(id);
+		return ResponseEntity.status(200).body(deleted);
 	}
 }

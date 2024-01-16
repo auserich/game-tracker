@@ -10,14 +10,19 @@ import game_tracker.exception.ResourceAlreadyExistsException;
 import game_tracker.exception.ResourceNotFoundException;
 import game_tracker.model.Commander;
 import game_tracker.model.Deck;
+import game_tracker.model.Game;
 import game_tracker.model.User;
 import game_tracker.repository.DeckRepository;
+import game_tracker.repository.GameRepository;
 
 @Service
 public class DeckService {
 	
 	@Autowired
 	DeckRepository repo;
+	
+	@Autowired
+	GameRepository gameRepository;
 	
 	public List<Deck> getAllDecks() {
 		return repo.findAll();
@@ -85,15 +90,49 @@ public class DeckService {
 		return repo.countTotalGamesForDeckByName(name);
 	}
 	
-	// TODO: Left off here. Move this to GameService and it's respective function to GameRepo. It's
-	// 		 returning a list of Games that a deckname was present in. Autowire GameService and
-	//		 call that function from that. Also just add a getOrderedListOfGamesByDeckname or something
-	//		 then just call that function from in here since other functions would want that, too
-	/*
-	 * public List<> getHighestWinstreakByDeckName(String name) {
-	 * 
-	 * }
-	 */
+	public Integer getHighestWinStreakByDeckName(String name) throws ResourceNotFoundException {
+		Optional<Deck> found = repo.findByName(name);
+		if (found.isEmpty()) {
+			throw new ResourceNotFoundException("Deck", -1);
+		}
+		
+		List<Game> games = gameRepository.getOrderedGamesByDeckName(name);
+		int currentWinStreak = 0;
+		int highestWinStreak = 0;
+		
+		for (Game game : games) {
+			if (name.equals(game.getWinner().getName()) ) {
+				currentWinStreak++;
+				highestWinStreak = Math.max(highestWinStreak, currentWinStreak);
+			} else {
+				currentWinStreak = 0;
+			}
+		}
+		
+		return highestWinStreak;
+	}
+	
+	public Integer getHighestLoseStreakByDeckName(String name) throws ResourceNotFoundException {
+		Optional<Deck> found = repo.findByName(name);
+		if (found.isEmpty()) {
+			throw new ResourceNotFoundException("Deck", -1);
+		}
+		
+		List<Game> games = gameRepository.getOrderedGamesByDeckName(name);
+		int currentLoseStreak = 0;
+		int highestLoseStreak = 0;
+		
+		for (Game game : games) {
+			if (name.equals(game.getWinner().getName()) ) {
+				currentLoseStreak = 0;
+			} else {
+				currentLoseStreak++;
+				highestLoseStreak = Math.max(highestLoseStreak, currentLoseStreak);
+			}
+		}
+		
+		return highestLoseStreak;
+	}
 	
 	public Deck createDeck(User user, Commander commander, String name) throws ResourceAlreadyExistsException {
 		
