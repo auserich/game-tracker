@@ -11,7 +11,7 @@ import game_tracker.exception.ResourceNotFoundException;
 import game_tracker.model.Commander;
 import game_tracker.model.Deck;
 import game_tracker.model.Game;
-import game_tracker.model.User;
+import game_tracker.model.Player;
 import game_tracker.repository.DeckRepository;
 import game_tracker.repository.GameRepository;
 
@@ -44,16 +44,16 @@ public class DeckService {
 		return found.get();
 	}
 	
-	public List<Deck> getAllDecksFromUserById(int userId) {
-		return repo.getAllDecksFromUserById(userId);
+	public List<Deck> getAllDecksFromPlayerById(int playerId) {
+		return repo.getAllDecksFromPlayerById(playerId);
 	}
 	
-	public List<Deck> getAllDecksFromUserByUsername(String username) {
-		return repo.getAllDecksFromUserByUsername(username);
+	public List<Deck> getAllDecksFromPlayerByPlayerName(String playerName) {
+		return repo.getAllDecksFromPlayerByPlayerName(playerName);
 	}
 	
-	public Deck getDeckByUserAndCommander(int userId, int commanderId) throws ResourceNotFoundException {
-		Optional<Deck> found = repo.getDeckByUserAndCommander(userId, commanderId);
+	public Deck getDeckByPlayerAndCommander(int playerId, int commanderId) throws ResourceNotFoundException {
+		Optional<Deck> found = repo.getDeckByPlayerAndCommander(playerId, commanderId);
 		if (found.isEmpty()) {
 			throw new ResourceNotFoundException("Deck", -1);
 		}
@@ -134,14 +134,14 @@ public class DeckService {
 		return highestLoseStreak;
 	}
 	
-	public Deck createDeck(User user, Commander commander, String name) throws ResourceAlreadyExistsException {
+	public Deck createDeck(Player player, Commander commander, String name) throws ResourceAlreadyExistsException {
 		
-		//TODO: Instead, get user and commander separately. Then check if commander is in database or needs to be searched via API
-		Optional<Deck> found = repo.getDeckByUserAndCommander(user.getId(), commander.getId());
+		//TODO: Instead, get player and commander separately. Then check if commander is in database or needs to be searched via API
+		Optional<Deck> found = repo.getDeckByPlayerAndCommander(player.getId(), commander.getId());
 		if (found.isPresent()) {
 			throw new ResourceAlreadyExistsException("Deck", found.get().getId());
 		}
-		Deck created = new Deck(null, user, commander, name);
+		Deck created = new Deck(null, player, commander, name);
 		return repo.save(created);
 	}
 	
