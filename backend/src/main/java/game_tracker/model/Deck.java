@@ -20,8 +20,8 @@ public class Deck implements Serializable {
 	private Integer id;
 	
 	@ManyToOne
-	@JoinColumn(name = "user_id", referencedColumnName = "id")
-	private User user;
+	@JoinColumn(name = "player_id", referencedColumnName = "id")
+	private Player player;
 	
 	@ManyToOne
 	@JoinColumn(name = "commander_id", referencedColumnName = "id")
@@ -34,10 +34,10 @@ public class Deck implements Serializable {
 		super();
 	}
 
-	public Deck(Integer id, User user, Commander commander, String name) {
+	public Deck(Integer id, Player player, Commander commander, String name) {
 		super();
 		this.id = id;
-		this.user = user;
+		this.player = player;
 		this.commander = commander;
 		this.name = name;
 	}
@@ -50,12 +50,12 @@ public class Deck implements Serializable {
 		this.id = id;
 	}
 
-	public User getUser() {
-		return user;
+	public Player getPlayer() {
+		return player;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 
 	public Commander getCommander() {

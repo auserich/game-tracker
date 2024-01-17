@@ -47,14 +47,14 @@ public class User implements Serializable {
 	
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private List<Deck> deck;
+	private List<Player> player;
 
 	public User() {
 		super();
 	}
 
 	public User(Integer id, String username, String password, Role role, boolean enabled, String email,
-			List<Deck> deck) {
+			List<Player> player) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -62,9 +62,9 @@ public class User implements Serializable {
 		this.role = role;
 		this.enabled = enabled;
 		this.email = email;
-		this.deck = deck;
+		this.player = player;
 	}
-	
+
 	public Integer getId() {
 		return id;
 	}
@@ -113,11 +113,11 @@ public class User implements Serializable {
 		this.email = email;
 	}
 
-	public List<Deck> getDeck() {
-		return deck;
+	public List<Player> getPlayer() {
+		return player;
 	}
 
-	public void setDeck(List<Deck> deck) {
-		this.deck = deck;
+	public void setPlayer(List<Player> player) {
+		this.player = player;
 	}
 }

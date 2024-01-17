@@ -12,17 +12,17 @@ import game_tracker.model.Deck;
 @Repository
 public interface DeckRepository extends JpaRepository<Deck, Integer> {
 
-	@Query(value = "SELECT * FROM deck WHERE user_id = ?1", nativeQuery = true)
-	public List<Deck> getAllDecksFromUserById(int userId);
+	@Query(value = "SELECT * FROM deck WHERE player_id = ?1", nativeQuery = true)
+	public List<Deck> getAllDecksFromPlayerById(int playerId);
 	
-	@Query(value = "SELECT * FROM deck JOIN user ON deck.user_id = user.id WHERE user.username = ?1", nativeQuery = true)
-	public List<Deck> getAllDecksFromUserByUsername(String username);
+	@Query(value = "SELECT * FROM deck JOIN user ON deck.player_id = player.id WHERE player.playerName = ?1", nativeQuery = true)
+	public List<Deck> getAllDecksFromPlayerByPlayerName(String playerName);
 	
 	@Query(value = "SELECT * FROM deck WHERE name = ?1", nativeQuery = true)
 	public Optional<Deck> findByName(String name);
 	
-	@Query(value = "SELECT * FROM deck WHERE user_id = ?1 AND commander_id = ?2", nativeQuery = true)
-	public Optional<Deck> getDeckByUserAndCommander(int userId, int commanderId);
+	@Query(value = "SELECT * FROM deck WHERE player_id = ?1 AND commander_id = ?2", nativeQuery = true)
+	public Optional<Deck> getDeckByPlayerAndCommander(int playerId, int commanderId);
 	
 	// TODO: Figure out why this isn't working correctly
 	@Query(value = "SELECT COUNT(*) FROM game " +

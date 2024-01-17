@@ -18,10 +18,10 @@ import game_tracker.exception.ResourceNotFoundException;
 import game_tracker.exception.UsernameNotFoundException;
 import game_tracker.model.Commander;
 import game_tracker.model.Deck;
-import game_tracker.model.User;
+import game_tracker.model.Player;
 import game_tracker.service.CommanderService;
 import game_tracker.service.DeckService;
-import game_tracker.service.UserService;
+import game_tracker.service.PlayerService;
 
 @RestController
 @RequestMapping("/api")
@@ -31,7 +31,7 @@ public class DeckController {
 	DeckService service;
 	
 	@Autowired
-	UserService userService;
+	PlayerService playerService;
 	
 	@Autowired
 	CommanderService commanderService;
@@ -47,23 +47,23 @@ public class DeckController {
 		return ResponseEntity.status(200).body(found);
 	}
 	
-	@GetMapping("/deck/userId")
-	public List<Deck> getAllDecksFromUserById(@RequestParam int userId) throws ResourceNotFoundException {
-		User found = userService.getUserById(userId);
-		return service.getAllDecksFromUserById(found.getId());
+	@GetMapping("/deck/playerId")
+	public List<Deck> getAllDecksFromPlayerById(@RequestParam int playerId) throws ResourceNotFoundException {
+		Player found = playerService.getPlayerById(playerId);
+		return service.getAllDecksFromPlayerById(found.getId());
 	}
 	
-	@GetMapping("/deck/username")
-	public List<Deck> getAllDecksFromUserByUsername(@RequestParam String username) throws ResourceNotFoundException, UsernameNotFoundException {
-		User found = userService.getUserByUsername(username);
-		return service.getAllDecksFromUserByUsername(found.getUsername());
+	@GetMapping("/deck/playerName")
+	public List<Deck> getAllDecksFromUserByPlayerName(@RequestParam String playerName) throws ResourceNotFoundException, UsernameNotFoundException {
+		Player found = playerService.getPlayerByName(playerName);
+		return service.getAllDecksFromPlayerByPlayerName(found.getName());
 	}
 	
-	@GetMapping("/deck/user/commander")
-	public ResponseEntity<Deck> getDeckByUserAndCommander(@RequestParam int userId, @RequestParam int commanderId) throws ResourceNotFoundException {
-		User foundUser = userService.getUserById(userId);
+	@GetMapping("/deck/player/commander")
+	public ResponseEntity<Deck> getDeckByPlayerAndCommander(@RequestParam int playerId, @RequestParam int commanderId) throws ResourceNotFoundException {
+		Player foundPlayer = playerService.getPlayerById(playerId);
 		Commander foundCommander = commanderService.getCommanderById(commanderId);
-		Deck found = service.getDeckByUserAndCommander(foundUser.getId(), foundCommander.getId());
+		Deck found = service.getDeckByPlayerAndCommander(foundPlayer.getId(), foundCommander.getId());
 		return ResponseEntity.status(200).body(found);
 	}
 	
@@ -98,17 +98,17 @@ public class DeckController {
 	}
 	
 	@PostMapping("/deck")
-	public ResponseEntity<Deck> createDeck(@RequestParam String username, @RequestParam String commanderName, @RequestParam String deckName) throws ResourceNotFoundException, ResourceAlreadyExistsException, UsernameNotFoundException {
-		User foundUser = userService.getUserByUsername(username);
+	public ResponseEntity<Deck> createDeck(@RequestParam String playerName, @RequestParam String commanderName, @RequestParam String deckName) throws ResourceNotFoundException, ResourceAlreadyExistsException, UsernameNotFoundException {
+		Player foundPlayer = playerService.getPlayerByName(playerName);
 		Commander foundCommander = commanderService.getCommanderByName(commanderName);
-		Deck created = service.createDeck(foundUser, foundCommander, deckName);
+		Deck created = service.createDeck(foundPlayer, foundCommander, deckName);
 		return ResponseEntity.status(201).body(created);
 	}
 	
 	@PutMapping("/deck")
 	public ResponseEntity<Deck> updateDeck(@RequestBody Deck deck) throws ResourceNotFoundException {
 		// Ensure user/commander associated with deck exists
-		userService.getUserById(deck.getUser().getId());
+		playerService.getPlayerById(deck.getPlayer().getId());
 		commanderService.getCommanderById(deck.getCommander().getId());
 		
 		Deck updated = service.updateDeck(deck);
