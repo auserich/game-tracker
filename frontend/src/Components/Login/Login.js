@@ -26,7 +26,7 @@ const Login = () => {
 			if (response.ok) {
 				const data = await response.json();
 				const { jwt } = data;
-				localStorage.setItem("jwtToken", jwt);
+				localStorage.setItem("jwt", jwt);
 				console.log("User authenticated successfully");
 				navigate("/dashboard");
 			} else {
