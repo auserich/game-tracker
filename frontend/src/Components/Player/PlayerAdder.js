@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-const PlayerAdder = () => {
+const PlayerAdder = ({ onPlayerAdded }) => {
 	const [playerName, setPlayerName] = useState("");
 
 	const handleSubmit = async (e) => {
@@ -23,10 +23,13 @@ const PlayerAdder = () => {
 				}
 			);
 
-			if (response.ok) {
+			if (response.ok && typeof onPlayerAdded === "function") {
 				console.log("Player created successfully");
+				// Notify the parent component about the new player
+				onPlayerAdded();
 			} else {
-				console.error("Failed to create player");
+				const data = await response.json();
+				console.error("Failed to create player", data);
 			}
 		} catch (error) {
 			console.error("Error creating player", error);

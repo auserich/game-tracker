@@ -20,6 +20,7 @@ const Signup = () => {
 					username: username,
 					password: password,
 					role: "ROLE_USER",
+					enabled: true,
 					email: email,
 				}),
 			});
