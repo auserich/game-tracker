@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-const Player = () => {
+const PlayerAdder = () => {
 	const [playerName, setPlayerName] = useState("");
 
 	const handleSubmit = async (e) => {
@@ -38,7 +38,7 @@ const Player = () => {
 			<Row>
 				<Col>
 					<Card>
-						<Card.Title>Player</Card.Title>
+						<Card.Title>Player Adder</Card.Title>
 						<Card.Body>
 							<Form onSubmit={handleSubmit}>
 								<h3 className="text-center mb-4"></h3>
@@ -65,11 +65,8 @@ const Player = () => {
 					</Card>
 				</Col>
 			</Row>
-			<Link to="/dashboard">
-				<Button>Dashboard</Button>
-			</Link>
 		</Container>
 	);
 };
 
-export default Player;
+export default PlayerAdder;
