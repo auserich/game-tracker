@@ -37,7 +37,7 @@ public class CommanderController {
 	
 	@GetMapping("/commander/search/{name}")
 	public ResponseEntity<?> getCommandersBySearch(@PathVariable String name) {
-		String apiUrl = "https://api.magicthegathering.io/v1/cards?name=" + name;
+		String apiUrl = "https://api.magicthegathering.io/v1/cards?name=" + name + "&supertypes=Legendary&type=Creature";
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.GET, null, String.class);
 		String responseBody = response.getBody();
