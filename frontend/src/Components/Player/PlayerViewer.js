@@ -1,39 +1,43 @@
 import React, { useState, useEffect } from "react";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 
-const PlayerViewer = () => {
+const PlayerViewer = ({ playersUpdated }) => {
 	const [players, setPlayers] = useState([]);
 	const [editPlayerId, setEditPlayerId] = useState(null);
 	const [editedPlayerName, setEditedPlayerName] = useState("");
 
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const jwt = localStorage.getItem("jwt");
-
-				const response = await fetch(
-					"http://localhost:8080/api/player/user",
-					{
-						method: "GET",
-						headers: {
-							Authorization: `Bearer ${jwt}`,
-							"Content-Type": "application/json",
-						},
-					}
-				);
-
-				if (!response.ok) {
-					console.error("Failed to get players");
-				}
-				const data = await response.json();
-				setPlayers(data);
-			} catch (error) {
-				console.error("Error fetching data: ", error.message);
-			}
-		};
-
-		fetchData();
+		fetchPlayers();
 	}, []);
+
+	const fetchPlayers = async () => {
+		try {
+			const jwt = localStorage.getItem("jwt");
+
+			const response = await fetch(
+				"http://localhost:8080/api/player/user",
+				{
+					method: "GET",
+					headers: {
+						Authorization: `Bearer ${jwt}`,
+						"Content-Type": "application/json",
+					},
+				}
+			);
+
+			if (!response.ok) {
+				console.error("Failed to get players");
+			}
+			const data = await response.json();
+			setPlayers(data);
+		} catch (error) {
+			console.error("Error fetching data: ", error.message);
+		}
+	};
+
+	useEffect(() => {
+		fetchPlayers();
+	}, [playersUpdated]);
 
 	const handleEdit = (playerId) => {
 		setEditPlayerId(playerId);
