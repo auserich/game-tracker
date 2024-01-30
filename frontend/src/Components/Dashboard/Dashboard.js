@@ -19,6 +19,9 @@ const Dashboard = () => {
 				<Link to="/commander">
 					<Button>Commander Module</Button>
 				</Link>
+				<Link to="/">
+					<Button variant="danger">Logout</Button>
+				</Link>
 			</div>
 		</Container>
 	);
