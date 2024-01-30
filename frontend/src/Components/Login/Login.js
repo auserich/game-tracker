@@ -28,7 +28,7 @@ const Login = () => {
 				const { jwt } = data;
 				localStorage.setItem("jwt", jwt);
 				console.log("User authenticated successfully");
-				navigate("/dashboard");
+				navigate("/home");
 			} else {
 				console.error("Failed to authenticate user");
 			}

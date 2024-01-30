@@ -3,11 +3,11 @@ import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./Components/Login/Login";
 import Signup from "./Components/Signup/Signup";
-import Dashboard from "./Components/Dashboard/Dashboard";
-import Deck from "./Components/Deck/Deck";
-import Game from "./Components/Game/Game";
-import Commander from "./Components/Commander/Commander";
+import HomeDashboard from "./Components/Home/HomeDashboard";
 import PlayerDashboard from "./Components/Player/PlayerDashboard";
+import CommanderDashboard from "./Components/Commander/CommanderDashboard";
+import DeckDashboard from "./Components/Deck/DeckDashboard";
+import GameDashboard from "./Components/Game/GameDashboard";
 
 function App() {
 	return (
@@ -15,11 +15,14 @@ function App() {
 			<Routes>
 				<Route path="/" element={<Login />}></Route>
 				<Route path="/signup" element={<Signup />}></Route>
-				<Route path="/dashboard" element={<Dashboard />}></Route>
+				<Route path="/home" element={<HomeDashboard />}></Route>
 				<Route path="/player" element={<PlayerDashboard />}></Route>
-				<Route path="/deck" element={<Deck />}></Route>
-				<Route path="/game" element={<Game />}></Route>
-				<Route path="/commander" element={<Commander />}></Route>
+				<Route path="/deck" element={<DeckDashboard />}></Route>
+				<Route path="/game" element={<GameDashboard />}></Route>
+				<Route
+					path="/commander"
+					element={<CommanderDashboard />}
+				></Route>
 			</Routes>
 		</BrowserRouter>
 	);
