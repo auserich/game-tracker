@@ -5,7 +5,7 @@ const GameDashboard = () => {
 	return (
 		<>
 			<AppNavbar />
-			<div>GameDashboard</div>
+			<h3>Game Dashboard</h3>
 		</>
 	);
 };

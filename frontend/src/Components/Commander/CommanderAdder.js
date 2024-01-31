@@ -9,7 +9,7 @@ import {
 	Row,
 } from "react-bootstrap";
 
-const CommanderAdder = () => {
+const CommanderAdder = ({ onCommanderAdded }) => {
 	const [commanderName, setCommanderName] = useState("");
 	const [searchResults, setSearchResults] = useState([]);
 
@@ -30,7 +30,7 @@ const CommanderAdder = () => {
 				}
 			);
 
-			if (response.ok) {
+			if (response.ok && typeof onCommanderAdded === "function") {
 				const data = await response.json();
 				// Using a Set to ensure uniqueness based on card name
 				const uniqueResultsSet = new Set(
@@ -40,7 +40,7 @@ const CommanderAdder = () => {
 				const uniqueResults = [...uniqueResultsSet].map((name) =>
 					data.cards.find((card) => card.name === name)
 				);
-
+				console.log(uniqueResults);
 				setSearchResults(uniqueResults);
 			} else {
 				console.error("Failed to fetch commanders");
@@ -50,11 +50,43 @@ const CommanderAdder = () => {
 		}
 	};
 
+	const handleAddCommander = async (result) => {
+		try {
+			const jwt = localStorage.getItem("jwt");
+			const colorIdentityString = result.colorIdentity.join(""); // Convert char array to string
+
+			const response = await fetch(
+				"http://localhost:8080/api/commander",
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${jwt}`,
+					},
+					body: JSON.stringify({
+						name: result.name,
+						colorIdentity: colorIdentityString,
+					}),
+				}
+			);
+
+			if (response.ok) {
+				console.log("Commander added successfully");
+				onCommanderAdded();
+			} else {
+				console.error("Failed to add commander");
+			}
+		} catch (error) {
+			console.error("Error adding commander", error);
+		}
+	};
+
 	return (
 		<Container>
 			<Row>
 				<Col>
 					<Card>
+						<Card.Title>Commander Adder</Card.Title>
 						<Card.Body>
 							<Form onSubmit={handleSubmit}>
 								<Row className="mb-3">
@@ -74,8 +106,20 @@ const CommanderAdder = () => {
 							</Form>
 							<ListGroup>
 								{searchResults.map((result) => (
-									<ListGroup.Item key={result.id}>
+									<ListGroup.Item
+										key={result.id}
+										className="d-flex justify-content-between align-items-center"
+									>
 										{result.name}
+										<Button
+											variant="primary"
+											className="ml-2"
+											onClick={() =>
+												handleAddCommander(result)
+											}
+										>
+											Add
+										</Button>
 									</ListGroup.Item>
 								))}
 							</ListGroup>

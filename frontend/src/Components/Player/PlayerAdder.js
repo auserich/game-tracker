@@ -55,12 +55,7 @@ const PlayerAdder = ({ onPlayerAdded }) => {
 										}
 									/>
 								</Form.Group>
-								<Button
-									block
-									variant="primary"
-									type="submit"
-									className="w-100"
-								>
+								<Button block variant="primary" type="submit">
 									Submit
 								</Button>
 							</Form>

@@ -1,11 +1,13 @@
 import React from "react";
 import AppNavbar from "../AppNavbar/AppNavbar";
+import DeckAdder from "./DeckAdder";
 
 const DeckDashboard = () => {
 	return (
 		<>
 			<AppNavbar />
-			<div>DeckDashboard</div>
+			<h3>Deck Dashboard</h3>
+			<DeckAdder />
 		</>
 	);
 };
