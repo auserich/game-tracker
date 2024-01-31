@@ -15,7 +15,7 @@ const PlayerDashboard = () => {
 	return (
 		<>
 			<AppNavbar />
-			<div>Player Dashboard</div>
+			<h3>Player Dashboard</h3>
 			<PlayerAdder onPlayerAdded={handlePlayerAdded} />
 			<PlayerViewer playersUpdated={playersUpdated} />
 		</>

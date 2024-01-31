@@ -40,7 +40,7 @@ const Login = () => {
 	return (
 		<Container className="mt-5">
 			<Row className="justify-content-center">
-				<Col md={6}>
+				<Col md={4}>
 					<Card>
 						<Card.Body>
 							<Form onSubmit={handleSubmit}>
