@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 
-const GameAdder = () => {
+const GameAdder = ({ onGameAdded }) => {
 	const [winningPlayer, setWinningPlayer] = useState(null);
 	const [playerNames, setPlayerNames] = useState(
 		Array.from({ length: 4 }, (_, index) => "")
@@ -46,11 +46,11 @@ const GameAdder = () => {
 				}
 			);
 
-			if (!response.ok) {
-				console.error("Failed to add game");
-			} else {
+			if (response.ok) {
 				console.log("Game added successfully");
-				// You may want to redirect or perform additional actions upon success
+				onGameAdded();
+			} else {
+				console.error("Failed to add game");
 			}
 		} catch (error) {
 			console.error("Error adding game: ", error.message);

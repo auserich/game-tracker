@@ -9,12 +9,16 @@ import {
 	Row,
 } from "react-bootstrap";
 
-const GameViewer = () => {
+const GameViewer = ({ gamesUpdated }) => {
 	const [games, setGames] = useState([]);
 
 	useEffect(() => {
 		fetchGames();
 	}, []);
+
+	useEffect(() => {
+		fetchGames();
+	}, [gamesUpdated]);
 
 	const fetchGames = async () => {
 		try {
@@ -49,19 +53,22 @@ const GameViewer = () => {
 
 	const organizeGamesByDate = () => {
 		const gamesByDate = {};
-		games.forEach((game) => {
-			const date = game.date;
-			if (!gamesByDate[date]) {
-				gamesByDate[date] = [];
-			}
-			gamesByDate[date].push(game);
+
+		// Sort dates in descending order
+		const sortedDates = games
+			.map((game) => game.date)
+			.sort((a, b) => new Date(a) - new Date(b));
+
+		sortedDates.forEach((date) => {
+			gamesByDate[date] = games.filter((game) => game.date === date);
 		});
+
 		return gamesByDate;
 	};
 
 	return (
 		<Container className="mt-5">
-			<Accordion defaultActiveKey="0">
+			<Accordion defaultActiveKey={null}>
 				{Object.entries(organizeGamesByDate()).map(
 					([date, gamesForDate], index) => (
 						<Accordion.Item key={index} eventKey={index.toString()}>
