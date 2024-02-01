@@ -3,11 +3,58 @@ import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 
 const GameAdder = () => {
 	const [winningPlayer, setWinningPlayer] = useState(null);
+	const [playerNames, setPlayerNames] = useState(
+		Array.from({ length: 4 }, (_, index) => "")
+	);
 
 	const handleCheckboxChange = (playerId) => {
 		setWinningPlayer((prevWinner) =>
-			prevWinner === playerId ? null : playerId
+			prevWinner === playerNames[playerId - 1]
+				? null
+				: playerNames[playerId - 1]
 		);
+	};
+
+	const handlePlayerNameChange = (playerId, event) => {
+		const newPlayerNames = [...playerNames];
+		newPlayerNames[playerId - 1] = event.target.value;
+		setPlayerNames(newPlayerNames);
+	};
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+
+		const formData = new FormData(e.target);
+		const date = formData.get("date");
+		const gameNumber = formData.get("gameNumber");
+		const deckNames = playerNames.map(
+			(name, index) => (index < 3 ? name : "") // Assuming you only have 4 players
+		);
+		const winnerName = formData.get("winnerName");
+
+		try {
+			const jwt = localStorage.getItem("jwt");
+
+			const response = await fetch(
+				`http://localhost:8080/api/game?date=${date}&gameNumber=${gameNumber}&deckName1=${deckNames[0]}&deckName2=${deckNames[1]}&deckName3=${deckNames[2]}&deckName4=${deckNames[3]}&winnerName=${winnerName}`,
+				{
+					method: "POST",
+					headers: {
+						Authorization: `Bearer ${jwt}`,
+						"Content-Type": "application/json",
+					},
+				}
+			);
+
+			if (!response.ok) {
+				console.error("Failed to add game");
+			} else {
+				console.log("Game added successfully");
+				// You may want to redirect or perform additional actions upon success
+			}
+		} catch (error) {
+			console.error("Error adding game: ", error.message);
+		}
 	};
 
 	return (
@@ -19,15 +66,18 @@ const GameAdder = () => {
 							Add a Game
 						</Card.Title>
 						<Card.Body>
-							<Form>
+							<Form onSubmit={handleSubmit}>
 								<Row>
 									<Col md={9} className="mb-3">
 										<Form.Label>Date</Form.Label>
-										<Form.Control type="date" />
+										<Form.Control type="date" name="date" />
 									</Col>
 									<Col md={3} className="mb-3">
 										<Form.Label>Game Number</Form.Label>
-										<Form.Control type="number" />
+										<Form.Control
+											type="number"
+											name="gameNumber"
+										/>
 									</Col>
 								</Row>
 								{Array.from(
@@ -51,16 +101,32 @@ const GameAdder = () => {
 													)
 												}
 												checked={
-													winningPlayer === playerId
+													winningPlayer ===
+													playerNames[playerId - 1]
 												}
+												name={`winnerName`}
+												value={
+													playerNames[playerId - 1]
+												} // Add this line
 											/>
 										</Col>
 										<Col md={12}>
-											<Form.Control />
+											<Form.Control
+												value={
+													playerNames[playerId - 1]
+												}
+												onChange={(e) =>
+													handlePlayerNameChange(
+														playerId,
+														e
+													)
+												}
+												name={`deckName${playerId}`}
+											/>
 										</Col>
 									</Row>
 								))}
-								<Button>Submit</Button>
+								<Button type="submit">Submit</Button>
 							</Form>
 						</Card.Body>
 					</Card>

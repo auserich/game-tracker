@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Button, Card, Col, Container, ListGroup, Row } from "react-bootstrap";
+import {
+	Accordion,
+	Button,
+	Card,
+	Col,
+	Container,
+	ListGroup,
+	Row,
+} from "react-bootstrap";
 
 const GameViewer = () => {
 	const [games, setGames] = useState([]);
@@ -53,14 +61,14 @@ const GameViewer = () => {
 
 	return (
 		<Container className="mt-5">
-			<Row>
-				<Col>
-					{Object.entries(organizeGamesByDate()).map(
-						([date, gamesForDate]) => (
-							<Card key={date} className="mt-3">
-								<Card.Header className="text-center">{`${formatDateString(
-									date
-								)}`}</Card.Header>
+			<Accordion defaultActiveKey="0">
+				{Object.entries(organizeGamesByDate()).map(
+					([date, gamesForDate], index) => (
+						<Accordion.Item key={index} eventKey={index.toString()}>
+							<Accordion.Header>
+								{formatDateString(date)}
+							</Accordion.Header>
+							<Accordion.Body>
 								<ListGroup variant="flush">
 									{gamesForDate.map((game) => (
 										<ListGroup.Item key={game.id}>
@@ -108,11 +116,11 @@ const GameViewer = () => {
 										</ListGroup.Item>
 									))}
 								</ListGroup>
-							</Card>
-						)
-					)}
-				</Col>
-			</Row>
+							</Accordion.Body>
+						</Accordion.Item>
+					)
+				)}
+			</Accordion>
 		</Container>
 	);
 };
