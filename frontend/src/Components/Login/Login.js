@@ -37,6 +37,35 @@ const Login = () => {
 		}
 	};
 
+	const handleDemo = async (e) => {
+		e.preventDefault();
+
+		try {
+			const response = await fetch("http://localhost:8080/authenticate", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					username: "test",
+					password: "test",
+				}),
+			});
+
+			if (response.ok) {
+				const data = await response.json();
+				const { jwt } = data;
+				localStorage.setItem("jwt", jwt);
+				console.log("User authenticated successfully");
+				navigate("/home");
+			} else {
+				console.error("Failed to authenticate user");
+			}
+		} catch (error) {
+			console.error("Error during user authentication", error);
+		}
+	};
+
 	return (
 		<Container className="mt-5">
 			<Row className="justify-content-center">
@@ -91,6 +120,18 @@ const Login = () => {
 							</Form>
 						</Card.Body>
 					</Card>
+				</Col>
+			</Row>
+			<Row className="mt-5">
+				<Col className="text-center">
+					<Button
+						variant="primary"
+						type="submit"
+						className="w-25"
+						onClick={handleDemo}
+					>
+						Demo
+					</Button>
 				</Col>
 			</Row>
 		</Container>

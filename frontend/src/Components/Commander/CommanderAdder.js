@@ -82,14 +82,16 @@ const CommanderAdder = ({ onCommanderAdded }) => {
 	};
 
 	return (
-		<Container>
+		<Container className="mt-5">
 			<Row>
 				<Col>
 					<Card>
-						<Card.Title>Commander Adder</Card.Title>
+						<Card.Header className="text-center">
+							Commander Adder
+						</Card.Header>
 						<Card.Body>
 							<Form onSubmit={handleSubmit}>
-								<Row className="mb-3">
+								<Row className="mb-2 mt-2">
 									<Col>
 										<Form.Control
 											placeholder="Enter commander name"
@@ -104,7 +106,7 @@ const CommanderAdder = ({ onCommanderAdded }) => {
 									</Col>
 								</Row>
 							</Form>
-							<ListGroup>
+							<ListGroup variant="flush">
 								{searchResults.map((result) => (
 									<ListGroup.Item
 										key={result.id}

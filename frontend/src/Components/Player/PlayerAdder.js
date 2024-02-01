@@ -37,14 +37,16 @@ const PlayerAdder = ({ onPlayerAdded }) => {
 	};
 
 	return (
-		<Container>
+		<Container className="mt-5">
 			<Row>
 				<Col>
 					<Card>
-						<Card.Title>Player Adder</Card.Title>
+						<Card.Header className="text-center">
+							Player Adder
+						</Card.Header>
 						<Card.Body>
 							<Form onSubmit={handleSubmit}>
-								<h3 className="text-center mb-4"></h3>
+								<h3 className="text-center"></h3>
 								<Form.Group className="mb-3">
 									<Form.Label>Player name</Form.Label>
 									<Form.Control

@@ -13,7 +13,7 @@ const DeckDashboard = () => {
 	return (
 		<>
 			<AppNavbar />
-			<h3>Deck Dashboard</h3>
+			<h3 className="text-center mt-3">Deck Dashboard</h3>
 			<DeckAdder onDeckAdded={handleDeckAdded} />
 			<DeckViewer decksUpdated={decksUpdated} />
 		</>
