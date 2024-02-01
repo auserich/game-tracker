@@ -13,7 +13,7 @@ const CommanderDashboard = () => {
 	return (
 		<>
 			<AppNavbar />
-			<h3>Commander Dashboard</h3>
+			<h3 className="text-center mt-3">Commander Dashboard</h3>
 			<CommanderAdder onCommanderAdded={handleCommanderAdded} />
 			<CommanderViewer commandersUpdated={commandersUpdated} />
 		</>

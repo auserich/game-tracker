@@ -73,34 +73,32 @@ const CommanderViewer = ({ commandersUpdated }) => {
 	};
 
 	return (
-		<Container>
+		<Container className="mt-5">
 			<Row>
 				<Col>
 					<Card>
-						<Card.Title>Commander Viewer</Card.Title>
-						<Card.Body>
-							<ListGroup>
-								{commanders.map((commander) => (
-									<ListGroup.Item
-										key={commander.id}
-										className="d-flex justify-content-between align-items-center"
+						<Card.Header className="text-center">
+							Commander Viewer
+						</Card.Header>
+						<ListGroup variant="flush">
+							{commanders.map((commander) => (
+								<ListGroup.Item
+									key={commander.id}
+									className="d-flex justify-content-between align-items-center"
+								>
+									{commander.name}
+									<Button
+										variant="danger"
+										className="ml-2"
+										onClick={() =>
+											handleDeleteCommander(commander.id)
+										}
 									>
-										{commander.name}
-										<Button
-											variant="danger"
-											className="ml-2"
-											onClick={() =>
-												handleDeleteCommander(
-													commander.id
-												)
-											}
-										>
-											Delete
-										</Button>
-									</ListGroup.Item>
-								))}
-							</ListGroup>
-						</Card.Body>
+										Delete
+									</Button>
+								</ListGroup.Item>
+							))}
+						</ListGroup>
 					</Card>
 				</Col>
 			</Row>

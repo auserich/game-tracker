@@ -117,7 +117,9 @@ const DeckAdder = ({ onDeckAdded }) => {
 			<Row className="justify-content-center">
 				<Col md={6}>
 					<Card>
-						<Card.Title>Deck Adder</Card.Title>
+						<Card.Title className="text-center mt-3">
+							Add a Deck
+						</Card.Title>
 						<Card.Body>
 							<Form onSubmit={handleSubmit}>
 								<Form.Group className="mb-3">

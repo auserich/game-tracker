@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+	Accordion,
 	Button,
 	Card,
 	Col,
@@ -217,11 +218,7 @@ const DeckViewer = ({ decksUpdated }) => {
 			<div>
 				{editDeck.deckId === deck.id ? (
 					<>
-						<Button
-							variant="success"
-							onClick={handleSaveEdit}
-							className="mr-2"
-						>
+						<Button variant="success" onClick={handleSaveEdit}>
 							Save
 						</Button>
 						<Button variant="secondary" onClick={handleCancelEdit}>
@@ -231,7 +228,7 @@ const DeckViewer = ({ decksUpdated }) => {
 				) : (
 					<>
 						<Button
-							variant="outline-primary"
+							variant="secondary"
 							onClick={() =>
 								handleEdit(
 									playerId,
@@ -240,13 +237,13 @@ const DeckViewer = ({ decksUpdated }) => {
 									deck.commanderId
 								)
 							}
+							disabled
 						>
 							Edit
 						</Button>
 						<Button
 							variant="danger"
 							onClick={() => handleDeleteDeck(deck.id)}
-							className="mr-2"
 						>
 							Delete
 						</Button>
@@ -261,16 +258,20 @@ const DeckViewer = ({ decksUpdated }) => {
 			{players.map((player) => (
 				<Row key={player.id}>
 					<Col>
-						<Card>
-							<Card.Title>{player.name}'s Decks</Card.Title>
-							<Card.Body>
-								<ListGroup>
-									{decks[player.id]?.map((deck) =>
-										renderDeckItem(deck, player.id)
-									)}
-								</ListGroup>
-							</Card.Body>
-						</Card>
+						<Accordion defaultActiveKey="0" className="mb-3">
+							<Accordion.Item eventKey="0">
+								<Accordion.Header>
+									{player.name}'s Decks
+								</Accordion.Header>
+								<Accordion.Body className="p-0">
+									<ListGroup variant="flush">
+										{decks[player.id]?.map((deck) =>
+											renderDeckItem(deck, player.id)
+										)}
+									</ListGroup>
+								</Accordion.Body>
+							</Accordion.Item>
+						</Accordion>
 					</Col>
 				</Row>
 			))}

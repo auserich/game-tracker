@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import {
+	Button,
+	Card,
+	Col,
+	Container,
+	Form,
+	ListGroup,
+	Row,
+} from "react-bootstrap";
 
 const PlayerViewer = ({ playersUpdated }) => {
 	const [players, setPlayers] = useState([]);
@@ -118,71 +126,67 @@ const PlayerViewer = ({ playersUpdated }) => {
 	};
 
 	return (
-		<Container>
-			<Row>
-				<Col>
-					<Card>
-						<Card.Title>Player Viewer</Card.Title>
-						<Card.Body>
-							{players.map((player) => (
-								<Row key={player.id} className="mb-2">
-									<Col>
-										{editPlayerId === player.id ? (
-											<Form.Control
-												type="text"
-												value={editedPlayerName}
-												onChange={(e) =>
-													setEditedPlayerName(
-														e.target.value
-													)
-												}
-											/>
-										) : (
-											player.name
-										)}
-									</Col>
-									<Col>
-										{editPlayerId === player.id ? (
-											<>
-												<Button
-													variant="success"
-													onClick={handleSaveEdit}
-													className="mr-2"
-												>
-													Save
-												</Button>
-												<Button
-													variant="secondary"
-													onClick={handleCancelEdit}
-												>
-													Cancel
-												</Button>
-											</>
-										) : (
-											<Button
-												variant="outline-primary"
-												onClick={() =>
-													handleEdit(player.id)
-												}
-											>
-												Edit
-											</Button>
-										)}{" "}
+		<Container className="mt-5">
+			<Card>
+				<Card.Header className="text-center">Player Viewer</Card.Header>
+				<ListGroup variant="flush">
+					{players.map((player) => (
+						<ListGroup.Item
+							key={player.id}
+							className="d-flex justify-content-between align-items-center mb-2"
+						>
+							{editPlayerId === player.id ? (
+								<Form.Control
+									type="text"
+									value={editedPlayerName}
+									onChange={(e) =>
+										setEditedPlayerName(e.target.value)
+									}
+								/>
+							) : (
+								player.name
+							)}
+							<div>
+								{editPlayerId === player.id ? (
+									<div className="d-flex">
 										<Button
-											variant="outline-danger"
+											variant="secondary"
+											onClick={handleCancelEdit}
+										>
+											Cancel
+										</Button>
+										<Button
+											variant="success"
+											onClick={handleSaveEdit}
+										>
+											Save
+										</Button>
+									</div>
+								) : (
+									<>
+										<Button
+											variant="primary"
+											onClick={() =>
+												handleEdit(player.id)
+											}
+										>
+											Edit
+										</Button>{" "}
+										<Button
+											variant="danger"
 											onClick={() =>
 												handleDelete(player.id)
 											}
 										>
 											Delete
 										</Button>
-									</Col>
-								</Row>
-							))}
-						</Card.Body>
-					</Card>
-				</Col>
-			</Row>
+									</>
+								)}
+							</div>
+						</ListGroup.Item>
+					))}
+				</ListGroup>
+			</Card>
 		</Container>
 	);
 };
