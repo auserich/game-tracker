@@ -1,11 +1,15 @@
 package game_tracker.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,6 +51,12 @@ public class DeckController {
 		return ResponseEntity.status(200).body(found);
 	}
 	
+	@GetMapping("/deck/name/{name}")
+	public ResponseEntity<Deck> getDeckByName(@PathVariable String name) throws ResourceNotFoundException {
+		Deck found = service.getDeckByName(name);
+		return ResponseEntity.status(200).body(found);
+	}
+	
 	@GetMapping("/deck/playerId")
 	public List<Deck> getAllDecksFromPlayerById(@RequestParam int playerId) throws ResourceNotFoundException {
 		Player found = playerService.getPlayerById(playerId);
@@ -70,31 +80,52 @@ public class DeckController {
 	@GetMapping("/deck/wins/name")
 	public Integer getWinsByDeckName(@RequestParam String name) throws ResourceNotFoundException  {
 		Deck found = service.getDeckByName(name);
-		return service.getWinsByDeckName(found.getName());
+		return service.getWinsByDeckId(found.getId());
 	}
 	
 	@GetMapping("deck/losses/name")
 	public Integer getLossesByDeckName(@RequestParam String name) throws ResourceNotFoundException {
 		Deck found = service.getDeckByName(name);
-		return service.getLossesByDeckName(found.getName());
+		return service.getLossesByDeckId(found.getId());
 	}
 	
 	@GetMapping("deck/games/name")
 	public Integer getGameCountByDeckName(@RequestParam String name) throws ResourceNotFoundException {
 		Deck found = service.getDeckByName(name);
-		return service.getGameCountByDeckName(found.getName());
+		return service.getGameCountByDeckId(found.getId());
+	}
+	
+	@GetMapping("deck/winrate/{name}")
+	public Double getWinrateByDeckName(@PathVariable String name) throws ResourceNotFoundException {
+		Deck found = service.getDeckByName(name);
+		Integer wins = service.getWinsByDeckId(found.getId());
+		Integer gameCount = service.getGameCountByDeckId(found.getId());
+		return (double) wins / gameCount;
 	}
 	
 	@GetMapping("deck/winstreak")
 	public Integer getHighestWinStreakByDeckName(@RequestParam String name) throws ResourceNotFoundException {
 		Deck found = service.getDeckByName(name);
-		return service.getHighestWinStreakByDeckName(found.getName());
+		return service.getHighestWinStreakByDeckId(found.getId());
 	}
 	
 	@GetMapping("deck/losestreak")
 	public Integer getHighestLoseStreakByDeckName(@RequestParam String name) throws ResourceNotFoundException {
 		Deck found = service.getDeckByName(name);
 		return service.getHighestLoseStreakByDeckName(found.getName());
+	}
+	
+	@GetMapping("deck/winrate")
+	public HashMap<String, Double> getAllDecksOrderedByWinrate() throws ResourceNotFoundException {
+		List<Deck> allDecks = service.getAllDecks();
+		HashMap<String, Double> winrates = new HashMap<>();
+		for (Deck deck : allDecks) {
+			Integer deckWins = service.getWinsByDeckId(deck.getId());
+			Integer gameCount = service.getGameCountByDeckId(deck.getId());
+			Double winrate = (double) deckWins / gameCount;
+			winrates.put(deck.getName(), winrate);
+		}
+		return winrates;
 	}
 	
 	@PostMapping("/deck")

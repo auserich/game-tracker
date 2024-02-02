@@ -132,6 +132,7 @@ const DeckViewer = ({ decksUpdated }) => {
 	};
 
 	const handleEdit = (playerId, deckId, deckName, commanderId) => {
+		console.log("commanderID: ", commanderId);
 		setEditDeck({
 			playerId,
 			deckId,
@@ -194,7 +195,7 @@ const DeckViewer = ({ decksUpdated }) => {
 		}
 	};
 
-	const renderDeckItem = (deck, playerId) => (
+	const renderDeckItem = (deck, playerId, commanderId) => (
 		<ListGroup.Item
 			key={deck.id}
 			className="d-flex justify-content-between align-items-center"
@@ -234,10 +235,9 @@ const DeckViewer = ({ decksUpdated }) => {
 									playerId,
 									deck.id,
 									deck.name,
-									deck.commanderId
+									commanderId
 								)
 							}
-							disabled
 						>
 							Edit
 						</Button>
@@ -266,7 +266,11 @@ const DeckViewer = ({ decksUpdated }) => {
 								<Accordion.Body className="p-0">
 									<ListGroup variant="flush">
 										{decks[player.id]?.map((deck) =>
-											renderDeckItem(deck, player.id)
+											renderDeckItem(
+												deck,
+												deck.player.id,
+												deck.commander.id
+											)
 										)}
 									</ListGroup>
 								</Accordion.Body>

@@ -1,11 +1,8 @@
 package game_tracker.controller;
 
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -46,44 +43,26 @@ public class GameController {
 	}
 	
 	@PostMapping("/game")
-	public ResponseEntity<?> createGame(
-			@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
-			@RequestParam Integer gameNumber,
-			@RequestParam String deckName1,
-			@RequestParam String deckName2,
-			@RequestParam String deckName3,
-			@RequestParam(required = false) String deckName4,
-			@RequestParam String winnerName
-			) throws ResourceNotFoundException {
-		
+	public ResponseEntity<?> createGame(@RequestBody Game game) throws ResourceNotFoundException {
+
+		// TODO: Figure out if this needs to stay or be removed
 		// Validate that winnerName is one of the deck names
-	    List<String> deckNames = Arrays.asList(deckName1, deckName2, deckName3, deckName4);
-	    if (!deckNames.contains(winnerName)) {
-	        return ResponseEntity.badRequest().body("Winner must be one of the participating decks.");
-	    }
 		
 		Deck deck4 = null;
-		try {
-		    if (deckName4 != null) {
-		        deck4 = deckService.getDeckByName(deckName4);
-		    }
-		} catch (ResourceNotFoundException e) {
-			// TODO: Figure out what to do here
-		    // Do nothing or log the exception (based on your preference)
-		    // You can log the exception for debugging purposes
-		    // logger.error("Deck not found for deckName4: {}", deckName4);
+		if (game.getDeck4().getId() != null) {
+			deck4 = deckService.getDeckById(game.getDeck4().getId());
 		}
 		
 		Game created = new Game(
 				null,
-				date,
-				gameNumber,
-				deckService.getDeckByName(deckName1),
-				deckService.getDeckByName(deckName2),
-				deckService.getDeckByName(deckName3),
+				game.getDate(),
+				game.getGameNumber(),
+				deckService.getDeckById(game.getDeck1().getId()),
+				deckService.getDeckById(game.getDeck2().getId()),
+				deckService.getDeckById(game.getDeck3().getId()),
 				deck4,
-				deckService.getDeckByName(winnerName));
-		
+				deckService.getDeckById(game.getWinner().getId()));
+		System.out.println("DATE: " + game.getDate());
 		try {
 			service.createGame(created);
 		} catch (IllegalArgumentException e) {
