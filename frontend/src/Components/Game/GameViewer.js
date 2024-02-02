@@ -43,11 +43,12 @@ const GameViewer = ({ gamesUpdated }) => {
 	};
 
 	const formatDateString = (dateString) => {
-		const options = { year: "numeric", month: "long", day: "numeric" };
-		const formattedDate = new Date(dateString).toLocaleDateString(
-			undefined,
-			options
-		);
+		const formattedDate = new Intl.DateTimeFormat(undefined, {
+			year: "numeric",
+			month: "long",
+			day: "numeric",
+			timeZone: "UTC", // Set the timezone to UTC for database dates
+		}).format(new Date(dateString));
 		return formattedDate;
 	};
 
@@ -57,7 +58,7 @@ const GameViewer = ({ gamesUpdated }) => {
 		// Sort dates in descending order
 		const sortedDates = games
 			.map((game) => game.date)
-			.sort((a, b) => new Date(a) - new Date(b));
+			.sort((a, b) => new Date(b) - new Date(a));
 
 		sortedDates.forEach((date) => {
 			gamesByDate[date] = games.filter((game) => game.date === date);
@@ -66,8 +67,36 @@ const GameViewer = ({ gamesUpdated }) => {
 		return gamesByDate;
 	};
 
+	const handleDelete = async (gameId) => {
+		try {
+			const jwt = localStorage.getItem("jwt");
+
+			const response = await fetch(
+				`http://localhost:8080/api/game/${gameId}`,
+				{
+					method: "DELETE",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${jwt}`,
+					},
+				}
+			);
+
+			if (!response.ok) {
+				console.error(`Failed to delete game with ID: ${gameId}`);
+				return;
+			}
+			setGames((prevGames) =>
+				prevGames.filter((game) => game.id !== gameId)
+			);
+		} catch (error) {
+			console.error("Error deleting game: ", error.message);
+		}
+	};
+
 	return (
-		<Container className="mt-5">
+		<Container className="mt-5 mb-5">
+			<h5 className="text-center mb-3">Game History</h5>
 			<Accordion defaultActiveKey={null}>
 				{Object.entries(organizeGamesByDate()).map(
 					([date, gamesForDate], index) => (
@@ -120,6 +149,16 @@ const GameViewer = ({ gamesUpdated }) => {
 													{game.deck4.commander.name}
 												</p>
 											)}
+
+											<Button
+												variant="danger"
+												className="ml-2"
+												onClick={() =>
+													handleDelete(game.id)
+												}
+											>
+												Delete
+											</Button>
 										</ListGroup.Item>
 									))}
 								</ListGroup>
