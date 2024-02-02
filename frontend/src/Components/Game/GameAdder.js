@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 
-const GameAdder = () => {
+const GameAdder = ({ onGameAdded }) => {
 	const [winningPlayer, setWinningPlayer] = useState(null);
 	const [playerNames, setPlayerNames] = useState(
 		Array.from({ length: 4 }, (_, index) => "")
 	);
+	const [gameNumber, setGameNumber] = useState(null); // Initialize Game Number
 
 	const handleCheckboxChange = (playerId) => {
 		setWinningPlayer((prevWinner) =>
@@ -21,15 +22,18 @@ const GameAdder = () => {
 		setPlayerNames(newPlayerNames);
 	};
 
+	const handleDateChange = (event) => {
+		// Update Game Number to 1 when date changes
+		setGameNumber(1);
+	};
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
 		const formData = new FormData(e.target);
 		const date = formData.get("date");
 		const gameNumber = formData.get("gameNumber");
-		const deckNames = playerNames.map(
-			(name, index) => (index < 3 ? name : "") // Assuming you only have 4 players
-		);
+		const deckNames = playerNames.slice(0, 4); // Include all players or limit to 4
 		const winnerName = formData.get("winnerName");
 
 		try {
@@ -46,11 +50,15 @@ const GameAdder = () => {
 				}
 			);
 
-			if (!response.ok) {
-				console.error("Failed to add game");
-			} else {
+			if (response.ok) {
 				console.log("Game added successfully");
-				// You may want to redirect or perform additional actions upon success
+				onGameAdded();
+				// Increment Game Number after successful submission
+				setGameNumber((prevGameNumber) => prevGameNumber + 1);
+				// Clear player names after successful submission
+				setPlayerNames(Array.from({ length: 4 }, (_, index) => ""));
+			} else {
+				console.error("Failed to add game");
 			}
 		} catch (error) {
 			console.error("Error adding game: ", error.message);
@@ -70,13 +78,21 @@ const GameAdder = () => {
 								<Row>
 									<Col md={9} className="mb-3">
 										<Form.Label>Date</Form.Label>
-										<Form.Control type="date" name="date" />
+										<Form.Control
+											type="date"
+											name="date"
+											onChange={handleDateChange}
+										/>
 									</Col>
 									<Col md={3} className="mb-3">
 										<Form.Label>Game Number</Form.Label>
 										<Form.Control
 											type="number"
 											name="gameNumber"
+											value={gameNumber}
+											onChange={(e) =>
+												setGameNumber(e.target.value)
+											}
 										/>
 									</Col>
 								</Row>
