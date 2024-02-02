@@ -8,6 +8,8 @@ import {
 	ListGroup,
 	Row,
 } from "react-bootstrap";
+import moment from "moment";
+import "moment-timezone";
 
 const GameViewer = ({ gamesUpdated }) => {
 	const [games, setGames] = useState([]);
@@ -42,13 +44,12 @@ const GameViewer = ({ gamesUpdated }) => {
 		}
 	};
 
-	const formatDateString = (dateString) => {
-		const formattedDate = new Intl.DateTimeFormat(undefined, {
-			year: "numeric",
-			month: "long",
-			day: "numeric",
-			timeZone: "UTC", // Set the timezone to UTC for database dates
-		}).format(new Date(dateString));
+	const formatDateString = (dateString, timeZone = "UTC") => {
+		console.log("Input Date:", dateString);
+		const formattedDate = moment
+			.tz(dateString, timeZone)
+			.format("MMMM D, YYYY");
+		console.log("Formatted Date:", formattedDate);
 		return formattedDate;
 	};
 
@@ -98,72 +99,83 @@ const GameViewer = ({ gamesUpdated }) => {
 		<Container className="mt-5 mb-5">
 			<h5 className="text-center mb-3">Game History</h5>
 			<Accordion defaultActiveKey={null}>
-				{Object.entries(organizeGamesByDate()).map(
-					([date, gamesForDate], index) => (
-						<Accordion.Item key={index} eventKey={index.toString()}>
-							<Accordion.Header>
-								{formatDateString(date)}
-							</Accordion.Header>
-							<Accordion.Body>
-								<ListGroup variant="flush">
-									{gamesForDate.map((game) => (
-										<ListGroup.Item key={game.id}>
-											<h5>Game {game.gameNumber}</h5>
-											<p>
-												Winner:{" "}
-												{game.winner.commander.name}
-											</p>
-											{game.deck1 && (
-												<p
-													style={{
-														marginLeft: "20px",
-													}}
-												>
-													{game.deck1.commander.name}
+				{games.length === 0 ? (
+					<Accordion.Item eventKey="noGames">
+						<Accordion.Header>No Game History</Accordion.Header>
+						<Accordion.Body>
+							<p>No games have been recorded yet.</p>
+						</Accordion.Body>
+					</Accordion.Item>
+				) : (
+					Object.entries(organizeGamesByDate()).map(
+						([date, gamesForDate], index) => (
+							<Accordion.Item
+								key={index}
+								eventKey={index.toString()}
+							>
+								<Accordion.Header>
+									{formatDateString(date)}
+								</Accordion.Header>
+								<Accordion.Body>
+									<ListGroup variant="flush">
+										{gamesForDate.map((game) => (
+											<ListGroup.Item key={game.id}>
+												<h5>Game {game.gameNumber}</h5>
+												<p>
+													Winner: {game.winner.name}
 												</p>
-											)}
-											{game.deck2 && (
-												<p
-													style={{
-														marginLeft: "20px",
-													}}
-												>
-													{game.deck2.commander.name}
-												</p>
-											)}
-											{game.deck3 && (
-												<p
-													style={{
-														marginLeft: "20px",
-													}}
-												>
-													{game.deck3.commander.name}
-												</p>
-											)}
-											{game.deck4 && (
-												<p
-													style={{
-														marginLeft: "20px",
-													}}
-												>
-													{game.deck4.commander.name}
-												</p>
-											)}
+												{game.deck1 && (
+													<p
+														style={{
+															marginLeft: "20px",
+														}}
+													>
+														{game.deck1.name}
+													</p>
+												)}
+												{game.deck2 && (
+													<p
+														style={{
+															marginLeft: "20px",
+														}}
+													>
+														{game.deck2.name}
+													</p>
+												)}
+												{game.deck3 && (
+													<p
+														style={{
+															marginLeft: "20px",
+														}}
+													>
+														{game.deck3.name}
+													</p>
+												)}
+												{game.deck4 && (
+													<p
+														style={{
+															marginLeft: "20px",
+														}}
+													>
+														{game.deck4.name}
+													</p>
+												)}
 
-											<Button
-												variant="danger"
-												className="ml-2"
-												onClick={() =>
-													handleDelete(game.id)
-												}
-											>
-												Delete
-											</Button>
-										</ListGroup.Item>
-									))}
-								</ListGroup>
-							</Accordion.Body>
-						</Accordion.Item>
+												<Button
+													variant="danger"
+													className="ml-2"
+													onClick={() =>
+														handleDelete(game.id)
+													}
+												>
+													Delete
+												</Button>
+											</ListGroup.Item>
+										))}
+									</ListGroup>
+								</Accordion.Body>
+							</Accordion.Item>
+						)
 					)
 				)}
 			</Accordion>

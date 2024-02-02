@@ -2,6 +2,7 @@ package game_tracker.model;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,7 +24,7 @@ public class Deck implements Serializable {
 	@JoinColumn(name = "player_id", referencedColumnName = "id")
 	private Player player;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "commander_id", referencedColumnName = "id")
 	private Commander commander;
 	

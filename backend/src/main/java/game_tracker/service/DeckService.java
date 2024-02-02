@@ -60,48 +60,48 @@ public class DeckService {
 		return found.get();
 	}
 	
-	public Integer getWinsByDeckName(String name) throws ResourceNotFoundException {
-		Optional<Deck> found = repo.findByName(name);
+	public Integer getWinsByDeckId(int id) throws ResourceNotFoundException {
+		Optional<Deck> found = repo.findById(id);
 		if (found.isEmpty()) {
 			throw new ResourceNotFoundException("Deck", -1);
 		}
-		return repo.countWinsForDeckByName(name);
+		return repo.countWinsForDeckById(id);
 	}
 	
 	// TODO: Figure out why countLossesForDeckByName isn't working and call that instead
-	public Integer getLossesByDeckName(String name) throws ResourceNotFoundException {
-		Optional<Deck> found = repo.findByName(name);
+	public Integer getLossesByDeckId(int id) throws ResourceNotFoundException {
+		Optional<Deck> found = repo.findById(id);
 		if (found.isEmpty()) {
 			throw new ResourceNotFoundException("Deck", -1);
 		}
 		
 		/* return repo.countLossesForDeckByName(name); */
 		
-		Integer totalGames = repo.countTotalGamesForDeckByName(name);
-		Integer wins = repo.countWinsForDeckByName(name);
+		Integer totalGames = repo.countTotalGamesForDeckById(id);
+		Integer wins = repo.countWinsForDeckById(id);
 		return totalGames - wins;
 	}
 	
-	public Integer getGameCountByDeckName(String name) throws ResourceNotFoundException {
-		Optional<Deck> found = repo.findByName(name);
+	public Integer getGameCountByDeckId(int id) throws ResourceNotFoundException {
+		Optional<Deck> found = repo.findById(id);
 		if (found.isEmpty()) {
 			throw new ResourceNotFoundException("Deck", -1);
 		}
-		return repo.countTotalGamesForDeckByName(name);
+		return repo.countTotalGamesForDeckById(id);
 	}
 	
-	public Integer getHighestWinStreakByDeckName(String name) throws ResourceNotFoundException {
-		Optional<Deck> found = repo.findByName(name);
+	public Integer getHighestWinStreakByDeckId(int id) throws ResourceNotFoundException {
+		Optional<Deck> found = repo.findById(id);
 		if (found.isEmpty()) {
 			throw new ResourceNotFoundException("Deck", -1);
 		}
 		
-		List<Game> games = gameRepository.getOrderedGamesByDeckName(name);
+		List<Game> games = gameRepository.getOrderedGamesByDeckId(id);
 		int currentWinStreak = 0;
 		int highestWinStreak = 0;
 		
 		for (Game game : games) {
-			if (name.equals(game.getWinner().getName()) ) {
+			if (id == game.getWinner().getId()) {
 				currentWinStreak++;
 				highestWinStreak = Math.max(highestWinStreak, currentWinStreak);
 			} else {
@@ -145,11 +145,34 @@ public class DeckService {
 		return repo.save(created);
 	}
 	
-	public Deck updateDeck(Deck deck) throws ResourceNotFoundException {
-		if (repo.existsById(deck.getId())) {
-			return repo.save(deck);
-		}
-		throw new ResourceNotFoundException("Deck", deck.getId());
+//	public Deck updateDeck(Deck deck) throws ResourceNotFoundException {
+//		if (repo.existsById(deck.getId())) {
+//			return repo.save(deck);
+//		}
+//		throw new ResourceNotFoundException("Deck", deck.getId());
+//	}
+	
+	public Deck updateDeck(Deck updatedDeck) throws ResourceNotFoundException {
+	    // Fetch the existing deck from the database
+	    Optional<Deck> existingDeckOptional = repo.findById(updatedDeck.getId());
+	    
+	    if (existingDeckOptional.isPresent()) {
+	        Deck existingDeck = existingDeckOptional.get();
+	        
+	        // Check if the associated player matches the one provided in the updated deck
+	        if (!existingDeck.getPlayer().getId().equals(updatedDeck.getPlayer().getId())) {
+	            // Handle the case where the provided player doesn't match the player associated with the deck
+	            throw new IllegalArgumentException("Invalid player for the given deck");
+	        }
+	        
+	        // Update only the necessary fields
+	        existingDeck.setName(updatedDeck.getName());
+
+	        // Save the updated deck
+	        return repo.save(existingDeck);
+	    }
+	    
+	    throw new ResourceNotFoundException("Deck", updatedDeck.getId());
 	}
 	
 	public Deck deleteDeckById(int id) throws ResourceNotFoundException {

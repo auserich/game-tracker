@@ -1,7 +1,6 @@
 package game_tracker.model;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,8 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -24,38 +21,37 @@ public class Game implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@Temporal(TemporalType.DATE) // Use this for java.util.Date
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date date;
+    private String date;
 	
 	@Column(nullable = false)
 	private Integer gameNumber;
 	
 	@ManyToOne
-    @JoinColumn(name = "deck1_name", referencedColumnName = "name")
+    @JoinColumn(name = "deck1_id", referencedColumnName = "id")
 	private Deck deck1;
 	
 	@ManyToOne
-    @JoinColumn(name = "deck2_name", referencedColumnName = "name")
+    @JoinColumn(name = "deck2_id", referencedColumnName = "id")
 	private Deck deck2;
 	
 	@ManyToOne
-    @JoinColumn(name = "deck3_name", referencedColumnName = "name")
+    @JoinColumn(name = "deck3_id", referencedColumnName = "id")
 	private Deck deck3;
 	
 	@ManyToOne
-    @JoinColumn(name = "deck4_name", referencedColumnName = "name")
+    @JoinColumn(name = "deck4_id", referencedColumnName = "id")
 	private Deck deck4;
 	
 	@ManyToOne
-    @JoinColumn(name = "winner_name", referencedColumnName = "name")
+    @JoinColumn(name = "winner_id", referencedColumnName = "id")
     private Deck winner;
 
 	public Game() {
 		super();
 	}
 
-	public Game(Integer id, Date date, Integer gameNumber, Deck deck1, Deck deck2, Deck deck3, Deck deck4,
+	public Game(Integer id, String date, Integer gameNumber, Deck deck1, Deck deck2, Deck deck3, Deck deck4,
 			Deck winner) {
 		super();
 		this.id = id;
@@ -76,11 +72,11 @@ public class Game implements Serializable {
 		this.id = id;
 	}
 
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 

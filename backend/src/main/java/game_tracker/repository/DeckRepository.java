@@ -34,9 +34,9 @@ public interface DeckRepository extends JpaRepository<Deck, Integer> {
 	Integer countLossesForDeckByName(String name);
 	
 	@Query(value = "SELECT COUNT(*) FROM game " +
-			"WHERE ?1 IN (game.deck1_name, game.deck2_name, game.deck3_name, game.deck4_name)", nativeQuery = true)
-	Integer countTotalGamesForDeckByName(String name);
+			"WHERE ?1 IN (game.deck1_id, game.deck2_id, game.deck3_id, game.deck4_id)", nativeQuery = true)
+	Integer countTotalGamesForDeckById(int id);
 	
-	@Query(value = "SELECT COUNT(*) FROM game WHERE winner_name = ?1", nativeQuery = true)
-	Integer countWinsForDeckByName(String name);
+	@Query(value = "SELECT COUNT(*) FROM game WHERE winner_id = ?1", nativeQuery = true)
+	Integer countWinsForDeckById(int id);
 }
