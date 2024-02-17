@@ -39,4 +39,12 @@ public interface DeckRepository extends JpaRepository<Deck, Integer> {
 	
 	@Query(value = "SELECT COUNT(*) FROM game WHERE winner_id = ?1", nativeQuery = true)
 	Integer countWinsForDeckById(int id);
+	
+	@Query(value = "SELECT deck.*, COUNT(game.id) AS gameCount " +
+	        "FROM deck " +
+	        "JOIN game ON deck.id IN (game.deck1_id, game.deck2_id, game.deck3_id, game.deck4_id) " +
+	        "WHERE deck.player_id = ?1 " +
+	        "GROUP BY deck.id " +
+	        "ORDER BY gameCount DESC", nativeQuery = true)
+	List<Deck> findDecksByPlayerOrderByPopularity(int playerId);
 }
