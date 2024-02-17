@@ -69,6 +69,12 @@ public class DeckController {
 		return service.getAllDecksFromPlayerByPlayerName(found.getName());
 	}
 	
+	@GetMapping("/deck/popular/player/{id}")
+	public List<Deck> getAllDecksFromPlayerOrderByMostPlayed(@PathVariable int id) throws ResourceNotFoundException {
+		Player found = playerService.getPlayerById(id);
+		return service.getAllDecksFromPlayerOrderedByMostPlayed(found.getId());
+	}
+	
 	@GetMapping("/deck/player/commander")
 	public ResponseEntity<Deck> getDeckByPlayerAndCommander(@RequestParam int playerId, @RequestParam int commanderId) throws ResourceNotFoundException {
 		Player foundPlayer = playerService.getPlayerById(playerId);
@@ -96,7 +102,7 @@ public class DeckController {
 	}
 	
 	@GetMapping("deck/winrate/{name}")
-	public Double getWinrateByDeckName(@PathVariable String name) throws ResourceNotFoundException {
+	public Double getWinRateByDeckName(@PathVariable String name) throws ResourceNotFoundException {
 		Deck found = service.getDeckByName(name);
 		Integer wins = service.getWinsByDeckId(found.getId());
 		Integer gameCount = service.getGameCountByDeckId(found.getId());
@@ -116,10 +122,24 @@ public class DeckController {
 	}
 	
 	@GetMapping("deck/winrate")
-	public HashMap<String, Double> getAllDecksOrderedByWinrate() throws ResourceNotFoundException {
-		List<Deck> allDecks = service.getAllDecks();
+	public HashMap<Integer, Double> getAllDecksOrderedByWinrate() throws ResourceNotFoundException {
+		List<Deck> decks = service.getAllDecks();
+		HashMap<Integer, Double> winrates = new HashMap<>();
+		for (Deck deck : decks) {
+			Integer deckWins = service.getWinsByDeckId(deck.getId());
+			Integer gameCount = service.getGameCountByDeckId(deck.getId());
+			Double winrate = (double) deckWins / gameCount;
+			winrates.put(deck.getId(), winrate);
+		}
+		return winrates;
+	}
+	
+	@GetMapping("deck/player/{name}/winrate")
+	public HashMap<String, Double> getAllDecksFromPlayerOrderByWinRate(@PathVariable String name) throws UsernameNotFoundException, ResourceNotFoundException {
+		Player found = playerService.getPlayerByName(name);
+		List<Deck> decks = service.getAllDecksFromPlayerById(found.getId());
 		HashMap<String, Double> winrates = new HashMap<>();
-		for (Deck deck : allDecks) {
+		for (Deck deck : decks) {
 			Integer deckWins = service.getWinsByDeckId(deck.getId());
 			Integer gameCount = service.getGameCountByDeckId(deck.getId());
 			Double winrate = (double) deckWins / gameCount;

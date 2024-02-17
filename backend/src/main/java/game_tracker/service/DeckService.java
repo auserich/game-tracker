@@ -52,6 +52,10 @@ public class DeckService {
 		return repo.getAllDecksFromPlayerByPlayerName(playerName);
 	}
 	
+	public List<Deck> getAllDecksFromPlayerOrderedByMostPlayed(int playerId) {
+		return repo.findDecksByPlayerOrderByPopularity(playerId);
+	}
+	
 	public Deck getDeckByPlayerAndCommander(int playerId, int commanderId) throws ResourceNotFoundException {
 		Optional<Deck> found = repo.getDeckByPlayerAndCommander(playerId, commanderId);
 		if (found.isEmpty()) {
